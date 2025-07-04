@@ -1,12 +1,14 @@
 # Local AI
 
+Local AI provides a fully self-hosted AI stack for private, local language model inference and search.
+
 ## Overview
 
-This repository uses three core software suites
+This repository integrates three primary software components:
 
-1. Ollama Local Model
-2. SearXNG Anonymized Queiries
-3. OpenWeb UI Chat Interface
+1. **Ollama** – Local large language model serving.
+2. **SearXNG** – Privacy-focused, anonymized search engine.
+3. **Open WebUI** – User-friendly chat interface for interaction.
 
 ## Instructions
 
