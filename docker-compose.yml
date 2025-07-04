@@ -1,0 +1,36 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    volumes:
+      - ./ollama:/root/.ollama
+    ports:
+      - "11434:11434"
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+    restart: unless-stopped
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: searxng
+    environment:
+      - BASE_URL=http://localhost:8080/
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: webui
+    environment:
+      - OLLAMA_BASE_URL=http://ollama:11434
+      - SEARCH_API_URL=http://searxng:8080
+      - WEBUI_AUTH=False # Disables login requirement (Source: https://github.com/open-webui/open-webui/discussions/10982)
+    ports:
+      - "3000:8080"
+    depends_on:
+      - ollama
+      - searxng
+    restart: unless-stopped
