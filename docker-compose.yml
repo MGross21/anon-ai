@@ -1,4 +1,11 @@
 services:
+  tor:
+    image: dperson/torproxy
+    container_name: tor
+    restart: unless-stopped
+    command: -N  # no authentication on SOCKS
+    ports:
+      - "9050:9050"  # expose to host (optional)
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
@@ -17,9 +24,13 @@ services:
     container_name: searxng
     environment:
       - BASE_URL=http://localhost:8080/
+    volumes:
+      - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+    depends_on:
+      - tor
     ports:
       - "8080:8080"
-    restart: unless-stopped
+    restart: always
 
   webui:
     image: ghcr.io/open-webui/open-webui:main

@@ -1,0 +1,21 @@
+use_default_settings: true
+
+general:
+  instance_name: "SearXNG Tor"
+  enable_metrics: false
+  enable_http_cache: false
+  keep_useragent: false
+  loglevel: WARNING
+  user_agents_pool:
+    - Mozilla/5.0 (X11; Linux x86_64)
+    - Mozilla/5.0 (Windows NT 10.0; Win64; x64)
+    - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+
+search:
+  safe_search: 0
+  autocomplete: "duckduckgo"
+
+outgoing:
+  request_timeout: 5.0
+  proxies:
+    all://: socks5://tor:9050

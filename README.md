@@ -40,11 +40,13 @@ sudo usermod -aG docker $USER
 newgrp docker # activate changes
 ```
 
-*Optional test:*
+#### Optional Test
 
 ```bash
 docker run hello-world
 ```
+
+*If you encounter permission errors, it is recommended to reboot your system to ensure that group membership changes take effect.*
 
 ### Donwload Repository
 
