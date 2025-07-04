@@ -54,8 +54,8 @@ cd local-ai
 ### Starting up AI
 
 >[!Warning]
-> Pulling images may take some time
-> **Total Download:** ~10G (~5G Docker + ~5G Model)
+> Pulling images may take some time <br>
+> **Total Download: ~10G** (~5G Docker + ~5G Model)
 
 ```bash
 ollama pull mistral # 7b param model
