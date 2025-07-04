@@ -1,14 +1,15 @@
 # Local AI
 
-Local AI provides a fully self-hosted AI stack for private, local language model inference and search.
+Provides a fully self-hosted AI stack for private, local language model inference and search, with a strong focus on privacy.
 
 ## Overview
 
-This repository integrates three primary software components:
+This repository integrates four primary software components:
 
 1. **Ollama** – Local large language model serving.
 2. **SearXNG** – Privacy-focused, anonymized search engine.
 3. **Open WebUI** – User-friendly chat interface for interaction.
+4. **Tor** – Enables anonymous network access and search through the Tor network.
 
 ## Instructions
 
@@ -17,7 +18,7 @@ This repository integrates three primary software components:
 #### Docker
 
 ```bash
-sudo <package-manager> docker{,-compose}
+sudo <package-manager> docker docker-compose
 ```
 
 #### Ollama
