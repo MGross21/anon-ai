@@ -2,14 +2,13 @@ services:
   tor:
     image: dperson/torproxy
     container_name: tor
-    command: -N
     ports:
       - "9050:9050"
     restart: unless-stopped
     cpus: 0.2
     mem_limit: 100m
     healthcheck:
-      test: ["CMD", "curl", "-s", "https://check.torproject.org/"]
+      test: ["CMD", "wget", "-qO-", "https://check.torproject.org/"]
       interval: 30s
       timeout: 10s
       retries: 5
@@ -57,14 +56,17 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
       - SEARCH_API_URL=http://searxng:8080
       - WEBUI_AUTH=False
+      - CHROMA_TELEMETRY_ENABLED=FALSE
     depends_on:
-      - ollama
-      - searxng
+      ollama:
+        condition: service_healthy
+      searxng:
+        condition: service_healthy
     ports:
       - "3000:8080"
     restart: unless-stopped
     cpus: 0.5
-    mem_limit: 512m
+    mem_limit: 1G
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
       interval: 30s
