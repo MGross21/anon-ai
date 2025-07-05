@@ -78,7 +78,7 @@ docker compose up -d
 |-----------------|------------------------|----------------------------------|
 | Web UI          | [localhost:3000](http://localhost:3000/) | ![Open WebUI](assets/open_webui_minimal.png) |
 | SearXNG         | [localhost:8080](http://localhost:8080/) | ![SearXNG](assets/searxng.png)       |
-| Ollama API      | [localhost:11434](http://localhost:11434/) |           `Ollama is running`                       |
+| Ollama API      | [localhost:11435](http://localhost:11435/) |           `Ollama is running`                       |
 
 ### Shutdown
 
