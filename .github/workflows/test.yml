@@ -1,0 +1,68 @@
+name: Test local-ai
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker layers
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Set up Docker Compose
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y docker-compose
+
+      - name: Build services with cache
+        run: |
+          docker buildx build \
+            --cache-from=type=local,src=/tmp/.buildx-cache \
+            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
+            --load \
+            .
+
+      - name: Move new cache
+        run: |
+          rm -rf /tmp/.buildx-cache
+          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+
+      - name: Start services
+        run: docker compose up -d
+
+      - name: Wait for services
+        run: |
+          echo "Waiting for containers to become healthy..."
+          sleep 20
+          docker ps
+
+      - name: Check Ollama health
+        run: |
+          curl -f http://localhost:11435 || (echo "Ollama is not healthy" && exit 1)
+
+      - name: Check SearXNG health
+        run: |
+          curl -f http://localhost:8080 || (echo "SearXNG is not healthy" && exit 1)
+
+      - name: Check WebUI health
+        run: |
+          curl -f http://localhost:3000 || (echo "WebUI is not healthy" && exit 1)
+
+      - name: Tear down
+        run: docker compose down
