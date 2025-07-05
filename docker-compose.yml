@@ -2,12 +2,17 @@ services:
   tor:
     image: dperson/torproxy
     container_name: tor
-    restart: unless-stopped
     command: -N
     ports:
       - "9050:9050"
+    restart: unless-stopped
     cpus: 0.2
     mem_limit: 100m
+    healthcheck:
+      test: ["CMD", "curl", "-s", "https://check.torproject.org/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   ollama:
     image: ollama/ollama:latest
@@ -19,6 +24,11 @@ services:
     restart: unless-stopped
     cpus: 4.5
     mem_limit: 8g
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:11434"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   searxng:
     image: searxng/searxng:latest
@@ -34,6 +44,11 @@ services:
     restart: always
     cpus: 0.8
     mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
 
   webui:
     image: ghcr.io/open-webui/open-webui:main
@@ -42,11 +57,16 @@ services:
       - OLLAMA_BASE_URL=http://ollama:11434
       - SEARCH_API_URL=http://searxng:8080
       - WEBUI_AUTH=False
-    ports:
-      - "3000:8080"
     depends_on:
       - ollama
       - searxng
+    ports:
+      - "3000:8080"
     restart: unless-stopped
     cpus: 0.5
     mem_limit: 512m
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
