@@ -9,60 +9,37 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Cache Docker layers
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-buildx-
-
       - name: Set up Docker Compose
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y docker-compose
+        uses: ndeloof/install-compose-action@v2
 
-      - name: Build services with cache
-        run: |
-          docker buildx build \
-            --cache-from=type=local,src=/tmp/.buildx-cache \
-            --cache-to=type=local,dest=/tmp/.buildx-cache-new \
-            --load \
-            .
-
-      - name: Move new cache
-        run: |
-          rm -rf /tmp/.buildx-cache
-          mv /tmp/.buildx-cache-new /tmp/.buildx-cache
+      - name: Build services
+        run: docker compose build
 
       - name: Start services
         run: docker compose up -d
 
       - name: Wait for services
-        run: |
-          echo "Waiting for containers to become healthy..."
-          sleep 20
-          docker ps
+        run: sleep 30
 
       - name: Check Ollama health
         run: |
-          curl -f http://localhost:11435 || (echo "Ollama is not healthy" && exit 1)
+          curl -f http://localhost:11435 || (echo "Ollama is not healthy" && docker compose logs ollama && exit 1)
 
       - name: Check SearXNG health
         run: |
-          curl -f http://localhost:8080 || (echo "SearXNG is not healthy" && exit 1)
+          curl -f http://localhost:8080 || (echo "SearXNG is not healthy" && docker compose logs searxng && exit 1)
 
       - name: Check WebUI health
         run: |
-          curl -f http://localhost:3000 || (echo "WebUI is not healthy" && exit 1)
+          curl -f http://localhost:3000 || (echo "WebUI is not healthy" && docker compose logs webui && exit 1)
 
       - name: Tear down
+        if: always()
         run: docker compose down
