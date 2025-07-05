@@ -1,4 +1,4 @@
-use_default_settings: true
+use_default_settings: false
 
 general:
   instance_name: "SearXNG Tor"
@@ -6,16 +6,19 @@ general:
   enable_http_cache: false
   keep_useragent: false
   loglevel: WARNING
-  user_agents_pool:
-    - Mozilla/5.0 (X11; Linux x86_64)
-    - Mozilla/5.0 (Windows NT 10.0; Win64; x64)
-    - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)
+  user_agents_pool: # Hardware Request Spoofing
+    - Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+    - Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36
+    - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15
+    - Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Firefox/127.0
+    - Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0
+    - Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7; rv:127.0) Gecko/20100101 Firefox/127.0
 
 search:
-  safe_search: 0
+  safe_search: 1  # 0=off, 1=moderate, 2=strict
   autocomplete: "duckduckgo"
 
 outgoing:
-  request_timeout: 5.0
+  request_timeout: 8.0 
   proxies:
     all://: socks5://tor:9050
