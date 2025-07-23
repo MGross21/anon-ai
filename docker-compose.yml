@@ -1,21 +1,19 @@
 services:
   tor:
     image: dperson/torproxy
-    container_name: tor
     ports:
       - "9050:9050"
     restart: unless-stopped
     cpus: 0.2
     mem_limit: 100m
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "https://check.torproject.org/"]
+      test: ["CMD", "curl", "--socks5-hostname", "localhost:9050", "https://check.torproject.org/"]
       interval: 30s
       timeout: 10s
       retries: 5
 
   ollama:
     image: ollama/ollama:latest
-    container_name: ollama
     volumes:
       - ./ollama:/root/.ollama
     ports:
@@ -31,9 +29,10 @@ services:
 
   searxng:
     image: searxng/searxng:latest
-    container_name: searxng
     environment:
       - BASE_URL=http://localhost:8080/
+      - http_proxy=socks5h://tor:9050
+      - https_proxy=socks5h://tor:9050
     volumes:
       - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
     depends_on:
@@ -51,7 +50,6 @@ services:
 
   webui:
     image: ghcr.io/open-webui/open-webui:main
-    container_name: webui
     environment:
       - OLLAMA_BASE_URL=http://ollama:11434
       - SEARCH_API_URL=http://searxng:8080
@@ -66,9 +64,9 @@ services:
       - "3000:8080"
     restart: unless-stopped
     cpus: 0.5
-    mem_limit: 1G
+    mem_limit: 1g
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      test: ["CMD", "curl", "-f", "http://0.0.0.0:8080"]
       interval: 30s
       timeout: 10s
       retries: 5
