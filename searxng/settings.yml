@@ -1,5 +1,5 @@
 # Disable merging in all default settings; fully custom config
-use_default_settings: false
+# use_default_settings: false
 
 # Server configuration
 server:
