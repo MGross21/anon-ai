@@ -16,7 +16,7 @@ server:
   bind_address: "0.0.0.0"
   
   # Request limiting can help prevent abuse, set false to disable
-  limiter: true
+  limiter: false
   
   # Control if your instance should be public or private
   public_instance: false
@@ -41,6 +41,7 @@ general:
   enable_http_cache: false    # Disable HTTP cache (improve anonymity)
   keep_useragent: false       # Spoof or drop user agents for privacy
   loglevel: WARNING
+  default_doi_resolver: "https://doi.org/"
   
   # Pool of User-Agents to randomly pick for outgoing requests
   user_agents_pool:
