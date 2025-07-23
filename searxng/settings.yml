@@ -1,5 +1,9 @@
 use_default_settings: false
 
+# Source: https://docs.searxng.org/admin/settings/settings_server.html#settings-server
+server:
+  secret_key: "REPLACE_WITH_CRYPTOGRAPHIC_KEY"  # Set a cryptographic key (eg. `openssl rand -hex 32`)
+
 general:
   instance_name: "SearXNG Tor"
   enable_metrics: false
