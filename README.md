@@ -34,9 +34,9 @@ curl -fsSL https://ollama.com/install.sh | sh
 Following [this tutorial](https://docs.docker.com/engine/install/linux-postinstall/),
 
 ```bash
-sudo systemctl start docker
+sudo systemctl start docker # may take some time
 sudo systemctl enable docker
-sudo groupadd docker
+sudo groupadd docker # optional, group may already exist
 sudo usermod -aG docker $USER
 newgrp docker # activate changes
 ```
