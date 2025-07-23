@@ -4,14 +4,14 @@ services:
     ports:
       - "${TOR_PORT:-9050}:9050"
     restart: unless-stopped
-    cpus: 0.2
+    cpus: "0.2"
     mem_limit: 100m
     healthcheck:
       test: ["CMD", "curl", "--socks5-hostname", "localhost:9050", "https://check.torproject.org/"]
       interval: 30s
       timeout: 10s
       retries: 5
-    read-only: true
+    read_only: true
     security_opt:
       - no-new-privileges:true
     networks:
@@ -24,7 +24,7 @@ services:
     volumes:
       - ollama-data:/root/.ollama
     restart: unless-stopped
-    cpus: 4
+    cpus: "4"
     mem_limit: 8g
     healthcheck:
       test: ["CMD-SHELL", "kill -0 1"]
@@ -41,17 +41,18 @@ services:
   searxng:
     image: searxng/searxng:latest
     environment:
-      - BASE_URL=${SEARXNG_BASE_URL:-http://localhost:8080/}
+      - BASE_URL=${SEARXNG_BASE_URL:-http://0.0.0.0:8080/}
       - http_proxy=socks5h://tor:9050
       - https_proxy=socks5h://tor:9050
-    # volumes:
-    #   - ./searxng/settings.yml:/etc/searxng/settings.yml:ro
+    volumes:
+      - ./searxng/:/etc/searxng/:ro
     depends_on:
-      - tor
+      tor:
+        condition: service_healthy
     ports:
       - "${SEARXNG_PORT:-8080}:8080"
     restart: always
-    cpus: 0.8
+    cpus: "0.8"
     mem_limit: 512m
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8080"]
@@ -59,9 +60,13 @@ services:
       timeout: 10s
       retries: 5
     read_only: true
+    tmpfs:
+      - /tmp
+      - /var/tmp
     security_opt:
       - no-new-privileges:true
     networks:
+      - proxy
       - backend
 
   webui:
@@ -79,7 +84,7 @@ services:
     ports:
       - "${WEBUI_PORT:-3000}:8080"
     restart: unless-stopped
-    cpus: 0.5
+    cpus: "0.5"
     mem_limit: 1g
     healthcheck:
       test: ["CMD", "curl", "-f", "http://0.0.0.0:8080"]
@@ -90,7 +95,6 @@ services:
     security_opt:
       - no-new-privileges:true
     networks:
-      - proxy
       - backend
 
 volumes:
