@@ -21,14 +21,6 @@ This repository integrates four primary software components:
 sudo <package-manager> docker docker-compose
 ```
 
-#### Ollama
-
-*Install/Update*
-
-```bash
-curl -fsSL https://ollama.com/install.sh | sh
-```
-
 ### System Services and Permissions
 
 Following [this tutorial](https://docs.docker.com/engine/install/linux-postinstall/),
@@ -70,6 +62,11 @@ ollama pull mistral # 7b param model
 
 ```bash
 docker compose up -d
+```
+
+Pulling Ollama Model (Containerized):
+```
+docker exec local-ai-ollama-1 ollama pull <model-name>
 ```
 
 ### Opening Stack

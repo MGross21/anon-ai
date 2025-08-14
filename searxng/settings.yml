@@ -1,74 +1,70 @@
-# Disable merging in all default settings; fully custom config
-# use_default_settings: false
+# Minimal privacy-focused SearXNG configuration
+use_default_settings: true
 
-# Server configuration
 server:
-  # Replace with a secure random hex key (generate via `openssl rand -hex 32`)
-  secret_key: "REPLACE_WITH_A_SECURE_RANDOM_KEY"
-  
-  # Base URL your instance is reachable at (adjust if reverse proxied)
+  # openssl rand -hex 32
+  secret_key: "bb7272521323b0bf265c077e38bcb0fbba2336830f65a543b5913787684343fe"
   base_url: "http://localhost:8080/"
-  
-  # Port to listen on inside the container (match docker-compose)
   port: 8080
-  
-  # Listen on all network interfaces in container (needed for Docker)
   bind_address: "0.0.0.0"
-  
-  # Request limiting can help prevent abuse, set false to disable
   limiter: false
-  
-  # Control if your instance should be public or private
   public_instance: false
-  
-  # Whether to proxy images through SearXNG (can improve privacy, but uses RAM)
-  image_proxy: false
-  
-  # HTTP method to use for searches, "GET" or "POST"
+  image_proxy: true
   method: "POST"
-  
-  # Default HTTP response headers for security
   default_http_headers:
     X-Content-Type-Options: nosniff
     X-Download-Options: noopen
     X-Robots-Tag: noindex, nofollow
     Referrer-Policy: no-referrer
 
-# General instance info and behavior
 general:
-  instance_name: "SearXNG Tor"
-  enable_metrics: false       # Disable Prometheus metrics by default
-  enable_http_cache: false    # Disable HTTP cache (improve anonymity)
-  keep_useragent: false       # Spoof or drop user agents for privacy
-  loglevel: WARNING
-  default_doi_resolver: "https://doi.org/"
-  
-  # Pool of User-Agents to randomly pick for outgoing requests
-  user_agents_pool:
-    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Safari/605.1.15"
-    - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Firefox/127.0"
-    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:127.0) Gecko/20100101 Firefox/127.0"
-    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7; rv:127.0) Gecko/20100101 Firefox/127.0"
+  instance_name: "SearXNG"
+  enable_metrics: false
+  debug: false
 
-# Search engine and feature configuration
 search:
-  # Safe search strictness: 0=off, 1=moderate, 2=strict
   safe_search: 1
-  
-  # Provide autocomplete suggestions from provider (e.g., duckduckgo)
-  autocomplete: "duckduckgo"
-  
-  # Enable response formats, must include json for API consumption (OpenWebUI)
+  autocomplete: ""
   formats:
     - html
     - json
 
-# Outgoing HTTP/HTTPS proxy & timeouts
 outgoing:
-  request_timeout: 8.0   # Seconds to wait for remote requests
-  
+  request_timeout: 8.0
   proxies:
-    # Route all outgoing protocols through the Tor SOCKS5h proxy container
-    all: "socks5h://tor:9050"
+    "all://": "socks5h://tor:9050"
+
+ui:
+  static_use_hash: true
+  default_locale: ""
+  default_theme: simple
+  theme_args:
+    simple_style: dark
+  results_on_new_tab: false
+  hotkeys: default
+
+engines:
+  - name: duckduckgo
+    engine: duckduckgo
+    shortcut: ddg
+    disabled: false
+
+  - name: startpage
+    engine: startpage
+    shortcut: sp
+    disabled: false
+
+  - name: bing
+    engine: bing
+    shortcut: bi
+    disabled: false
+
+  - name: google
+    engine: google
+    shortcut: go
+    disabled: false
+
+  - name: qwant
+    engine: qwant
+    shortcut: qw
+    disabled: false

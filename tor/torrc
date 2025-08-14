@@ -1,0 +1,33 @@
+# Simplified Tor configuration for Docker
+# Basic SOCKS proxy
+SocksPort 0.0.0.0:9050
+
+# Basic connectivity options
+FascistFirewall 0
+ReachableAddresses *:80,*:443
+ReachableORAddresses *:443,*:80
+
+# Use bridges if needed (disabled by default)
+UseBridges 0
+ClientUseIPv6 1
+
+# Circuit building optimizations
+NumEntryGuards 6
+GuardLifetime 30 days
+NewCircuitPeriod 30
+MaxCircuitDirtiness 600
+
+# Connection optimizations
+KeepalivePeriod 60
+
+# Logging
+Log notice stderr
+
+# Performance optimizations
+HardwareAccel 1
+
+# Directory downloads
+FetchDirInfoEarly 1
+FetchServerDescriptors 1
+FetchUselessDescriptors 0
+DownloadExtraInfo 0
