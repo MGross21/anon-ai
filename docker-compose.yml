@@ -55,7 +55,7 @@ services:
       - |
         ollama serve &
         sleep 10
-        ollama pull $${OLLAMA_MODEL:-deepseek-coder:6.7b}
+        ollama pull $${OLLAMA_MODEL:-deepseek-coder:1.3b}
         wait
 
   searxng:
@@ -90,12 +90,38 @@ services:
   webui:
     image: ghcr.io/open-webui/open-webui:main
     environment:
+      # Ollama connection
       - OLLAMA_BASE_URL=http://ollama:11434
-      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>
+
+      # SearxNG connection
+      - SEARXNG_BASE_URL=http://searxng:8080
+      - SEARXNG_QUERY_URL=http://searxng:8080/search?q=<query>&format=json
+
+      # WebUI options
       - WEBUI_AUTH=False
-      - CHROMA_TELEMETRY_ENABLED=false
       - DATA_DIR=/app/backend/data
       - ENABLE_VERSION_UPDATE_CHECK=false
+      - SHOW_RELEASE_NOTES=false
+      - WEBUI_SHOW_RELEASE_NOTES=false
+
+      # RAG/Web Search
+      - ENABLE_RAG_WEB_SEARCH=true
+      - RAG_WEB_SEARCH_ENGINE=searxng
+      - DEFAULT_RAG_WEB_SEARCH_ENABLED=true
+      - ENABLE_RAG_WEB_LOADER=true
+
+      # General Search
+      - ENABLE_WEB_SEARCH=true
+      - WEB_SEARCH_ENGINE=searxng
+      - ENABLE_SEARCH=true
+      - SEARCH_ENGINE=searxng
+
+      # Tools/Function Calling
+      - ENABLE_FUNCTION_CALLING=true
+      - ENABLE_TOOLS=true
+
+      # Telemetry
+      - CHROMA_TELEMETRY_ENABLED=false
     depends_on:
       - ollama
       - searxng

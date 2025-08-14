@@ -2,6 +2,13 @@
 
 Provides a fully self-hosted AI stack for private, local language model inference and search, with a strong focus on privacy.
 
+> [!WARNING]
+> **Minimum System Requirements**
+>
+> - **Disk Space:** ~15 GB
+> - **RAM:** 11 GB
+
+
 ## Overview
 
 This repository integrates four primary software components:
@@ -48,15 +55,7 @@ git clone https://github.com/MGross21/local-ai
 cd local-ai
 ```
 
-### Starting up AI
-
->[!Warning]
-> Pulling images may take some time <br>
-> **Total Download: ~10G** (~5G Docker + ~5G Model)
-
-```bash
-ollama pull mistral # 7b param model
-```
+### Starting up
 
 [See other models here](https://ollama.com/library?sort=popular)
 
@@ -64,10 +63,10 @@ ollama pull mistral # 7b param model
 docker compose up -d
 ```
 
-Pulling Ollama Model (Containerized):
+<!-- Pulling Ollama Model (Containerized):
 ```
 docker exec local-ai-ollama-1 ollama pull <model-name>
-```
+``` -->
 
 ### Opening Stack
 
