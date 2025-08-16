@@ -26,6 +26,7 @@ services:
       - no-new-privileges:true
     networks:
       - proxy
+      - backend
 
   ollama:
     image: ollama/ollama:latest
@@ -63,9 +64,10 @@ services:
     environment:
       - BASE_URL=${SEARXNG_BASE_URL:-http://0.0.0.0:8080/}
       - SEARXNG_SETTINGS_PATH=/etc/searxng/settings.yml
+    user: "root"
     volumes:
-      - ./searxng/:/etc/searxng/:ro
-    user: "1000:1000"
+      - ./searxng/:/etc/searxng/:rw
+      - ./searxng/cache:/var/cache/searxng:rw
     depends_on:
       - tor
     ports:
@@ -79,7 +81,6 @@ services:
     tmpfs:
       - /tmp
       - /var/tmp
-      - /var/cache/searxng
       - /var/log/uwsgi
     security_opt:
       - no-new-privileges:true
@@ -122,6 +123,7 @@ services:
 
       # Telemetry
       - CHROMA_TELEMETRY_ENABLED=false
+      - CORS_ALLOW_ORIGIN=http://localhost
     depends_on:
       - ollama
       - searxng

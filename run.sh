@@ -1,0 +1,67 @@
+#!/bin/bash
+
+DOCKER_COMPOSE_CMD="docker compose up"
+DOCKER_COMPOSE_DOWN_CMD="docker compose down"
+FIREFOX_CMD="firefox http://localhost:3000"
+
+wait_for_port() {
+    PORT=$1
+    TIMEOUT=${2:-60}
+    START=$(date +%s)
+    while [ $(($(date +%s) - START)) -lt "$TIMEOUT" ]; do
+        if command -v netstat >/dev/null 2>&1; then
+            netstat -tuln | grep -q ":$PORT" && return 0
+        elif command -v ss >/dev/null 2>&1; then
+            ss -tuln | grep -q ":$PORT" && return 0
+        fi
+        sleep 1
+    done
+    return 1
+}
+
+assert_docker_service_running() {
+    if ! systemctl is-active --quiet docker; then
+        echo "Docker service not running. Starting..."
+        sudo systemctl start docker
+    else
+        echo "Docker service is already running."
+    fi
+}
+
+cleanup() {
+    echo -e "\nShutting down..."
+    pkill -f "$FIREFOX_CMD" 2>/dev/null || echo "Firefox not running."
+    $DOCKER_COMPOSE_DOWN_CMD
+    exit 0
+}
+
+trap cleanup INT
+
+# Check if Docker is installed
+if ! command -v docker >/dev/null 2>&1; then
+  echo "Error: Docker is not installed. Please install Docker to proceed."
+  exit 1
+fi
+
+# Check if Docker Compose is installed
+if ! command -v docker-compose >/dev/null 2>&1; then
+  echo "Error: Docker Compose is not installed. Please install Docker Compose to proceed."
+  exit 1
+fi
+
+assert_docker_service_running
+
+$DOCKER_COMPOSE_CMD &
+DOCKER_PID=$!
+
+echo "Waiting for port 3000 to be ready..."
+if ! wait_for_port 3000; then
+    echo "Port 3000 not ready after timeout."
+    kill "$DOCKER_PID"
+    exit 1
+fi
+
+echo "Port 3000 is ready. Opening Firefox..."
+$FIREFOX_CMD &
+
+wait "$DOCKER_PID"

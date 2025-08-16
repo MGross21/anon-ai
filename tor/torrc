@@ -1,6 +1,6 @@
 # Simplified Tor configuration for Docker
-# Basic SOCKS proxy
-SocksPort 0.0.0.0:9050
+# Updated SocksPort to restrict access
+SocksPort 127.0.0.1:9050
 
 # Basic connectivity options
 FascistFirewall 0
@@ -31,3 +31,7 @@ FetchDirInfoEarly 1
 FetchServerDescriptors 1
 FetchUselessDescriptors 0
 DownloadExtraInfo 0
+
+# Added warning to avoid running Tor as root
+RunAsDaemon 1
+User tor

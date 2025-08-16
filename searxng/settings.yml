@@ -68,3 +68,9 @@ engines:
     engine: qwant
     shortcut: qw
     disabled: false
+
+# Added ownership fix for directories
+ownership_fix:
+  directories:
+    - /etc/searxng
+    - /var/cache/searxng
