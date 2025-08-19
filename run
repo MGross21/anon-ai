@@ -1,6 +1,7 @@
 #!/bin/bash
 
 DOCKER_COMPOSE_CMD="docker compose up"
+DOCKER_COMPOSE_PULL_CMD="docker compose pull"
 DOCKER_COMPOSE_DOWN_CMD="docker compose down"
 FIREFOX_CMD="firefox http://localhost:3000"
 
@@ -51,6 +52,7 @@ fi
 
 assert_docker_service_running
 
+$DOCKER_COMPOSE_PULL_CMD
 $DOCKER_COMPOSE_CMD &
 DOCKER_PID=$!
 

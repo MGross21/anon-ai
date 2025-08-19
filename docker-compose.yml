@@ -2,7 +2,7 @@ services:
   tor:
     image: dperson/torproxy:latest
     ports:
-      - "${TOR_PORT:-9050}:9050"
+      - "${TOR_PORT}:9050"
     restart: unless-stopped
     deploy:
       resources:
@@ -31,7 +31,7 @@ services:
   ollama:
     image: ollama/ollama:latest
     ports:
-      - "${OLLAMA_PORT:-11435}:11434"
+      - "${OLLAMA_PORT}:11434"
     volumes:
       - ollama-data:/root/.ollama
     restart: unless-stopped
@@ -56,7 +56,7 @@ services:
       - |
         ollama serve &
         sleep 10
-        ollama pull $${OLLAMA_MODEL:-deepseek-coder:1.3b}
+        ollama pull $${OLLAMA_MODEL}
         wait
 
   searxng:
@@ -128,7 +128,7 @@ services:
       - ollama
       - searxng
     ports:
-      - "${WEBUI_PORT:-3000}:8080"
+      - "${WEBUI_PORT}:8080"
     volumes:
       - webui-data:/app/backend/data
     restart: unless-stopped
