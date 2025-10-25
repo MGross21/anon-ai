@@ -1,6 +1,9 @@
-# Local AI
+# Anonymous Local AI
 
 Provides a fully self-hosted AI stack for private, local language model inference and search, with a strong focus on privacy.
+
+
+![Preview Image](https://raw.githubusercontent.com/MGross21/anon-ai/main/assets/hello_world_llama.PNG)
 
 > [!WARNING]
 > **Minimum System Requirements**
